@@ -1,719 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>
-      ⚽ Live Football Streams
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8" />
+<head>
+    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+    <script type="text/javascript">
+        aclib.runPop({
+            zoneId: '10973950',
+        });
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <title>CMV | Elite Streaming</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
     <style>
-      * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --gold: #FFD700;
+            --gold-glow: rgba(255, 215, 0, 0.4);
+            --bg-dark: #05070a;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
 
-body {
-  background: #0a0e1a;
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, sans-serif;
-  min-height: 100vh;
-  padding-bottom: 40px;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-.header {
-  background: linear-gradient(135deg, rgba(16,185,129,.12), rgba(16,185,129,.04));
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(16,185,129,.2);
-  padding: 28px 20px;
-  text-align: center;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 4px 24px rgba(0,0,0,.4);
-}
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at top right, #1a1a2e, transparent),
+                              radial-gradient(circle at bottom left, #0d1117, transparent);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            width: 100%;
+        }
 
-h1 {
-  font-size: 28px; font-weight: 800;
-  background: linear-gradient(135deg, #10b981, #34d399);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
-}
+        /* Plyr Customization to match Code 1 */
+        .plyr {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .plyr--full-ui input[type=range] { color: var(--gold); }
+        .plyr__control--overlaid { background: var(--gold); color: #000; }
+        .plyr--video .plyr__control.plyr__tab-focus, 
+        .plyr--video .plyr__control:hover, 
+        .plyr--video .plyr__control[aria-expanded=true] { background: var(--gold); color: #000; }
 
-.subtitle { color: rgba(255,255,255,.55); font-size: 13px; margin-top: 6px; }
+        .header {
+            padding: 20px; text-align: center; backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: sticky; top: 0; z-index: 100; background: rgba(5, 7, 10, 0.85);
+        }
 
-.count-badge {
-  display: inline-block;
-  background: rgba(16,185,129,.12);
-  border: 1px solid rgba(16,185,129,.25);
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px; font-weight: 600;
-  color: #34d399;
-  margin-top: 10px;
-}
+        .brand-logo {
+            font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px;
+            background: linear-gradient(to bottom, #fff 40%, var(--gold));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
 
-.container { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+        .tg-badge {
+            display: inline-flex; align-items: center; background: rgba(255,255,255,0.05);
+            padding: 8px 20px; border-radius: 50px; text-decoration: none;
+            color: var(--gold); font-size: 0.8rem; font-weight: 800;
+            border: 1px solid rgba(255, 215, 0, 0.2); transition: var(--transition);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .tg-badge:hover { background: var(--gold); color: #000; transform: scale(1.05); }
 
-/* Tournament Section */
-.tournament-section {
-  margin-bottom: 28px;
-}
+        .popup-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; backdrop-filter: blur(20px);
+        }
 
-.tournament-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 16px;
-  background: rgba(255,255,255,.04);
-  border-radius: 14px 14px 0 0;
-  border: 1px solid rgba(255,255,255,.08);
-  border-bottom: none;
-}
+        .popup-card {
+            background: #000; padding: 40px; border-radius: 28px;
+            border: 1px solid rgba(255,215,0,0.2); text-align: center;
+            max-width: 380px; width: 90%;
+        }
 
-.tournament-icon { font-size: 18px; }
+        .btn-main {
+            display: block; width: 100%; padding: 14px; border-radius: 12px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            transition: var(--transition); margin-top: 12px; text-decoration: none;
+        }
+        .btn-gold { background: var(--gold); color: #000; border: none; }
+        .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.15); }
 
-.tournament-name {
-  font-size: 16px; font-weight: 700;
-  color: #e2e8f0;
-  flex: 1;
-}
+        .main-wrapper { max-width: 1000px; margin: 0 auto; padding: 15px; display: none; }
+        
+        .video-container-box {
+            position: relative; width: 100%;
+            background: #000; border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
+        }
 
-.tournament-count {
-  background: rgba(16,185,129,.15);
-  color: #34d399;
-  font-size: 11px; font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 12px;
-}
+        .switcher {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px; margin-bottom: 20px;
+        }
 
-/* Cards */
-.card {
-  display: block;
-  text-decoration: none; color: #fff;
-  background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border: 1px solid rgba(255,255,255,.08);
-  padding: 20px;
-  transition: all .25s ease;
-  cursor: pointer;
-}
+        .s-btn {
+            padding: 12px 8px; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08);
+            color: #fff; border-radius: 10px; font-weight: 600; font-size: 0.85rem;
+            cursor: pointer; transition: var(--transition);
+        }
 
-.card:last-child { border-radius: 0 0 14px 14px; }
-.card + .card { border-top: 1px solid rgba(255,255,255,.06); }
-
-.card:hover {
-  background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(16,185,129,.03));
-  border-color: rgba(16,185,129,.25);
-}
-
-.card-top {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 14px;
-}
-
-.live-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(239,68,68,.12);
-  color: #f87171;
-  font-size: 10px; font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 6px;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  border: 1px solid rgba(239,68,68,.25);
-}
-
-.live-dot {
-  width: 6px; height: 6px;
-  background: #f87171;
-  border-radius: 50%;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,100% { opacity:1; transform:scale(1); }
-  50% { opacity:.4; transform:scale(1.3); }
-}
-
-.stream-count {
-  font-size: 11px; font-weight: 600;
-  color: rgba(255,255,255,.45);
-  background: rgba(255,255,255,.06);
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
-.teams-row {
-  display: flex; align-items: center; justify-content: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.team {
-  font-size: 17px; font-weight: 700;
-  text-align: center;
-  flex: 1;
-  line-height: 1.3;
-}
-
-.vs-badge {
-  font-size: 11px; font-weight: 800;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.5);
-  padding: 4px 10px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-.card-meta {
-  display: flex; justify-content: center; gap: 16px;
-  margin-bottom: 16px;
-}
-
-.meta-item {
-  font-size: 12px;
-  color: rgba(255,255,255,.45);
-  font-weight: 500;
-}
-
-.watch-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: 100%;
-  background: linear-gradient(135deg, #10b981, #34d399);
-  color: #000;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-weight: 700; font-size: 14px;
-  transition: all .2s ease;
-  box-shadow: 0 4px 16px rgba(16,185,129,.25);
-}
-
-.card:hover .watch-btn {
-  box-shadow: 0 6px 24px rgba(16,185,129,.4);
-  transform: scale(1.02);
-}
-
-.play-icon {
-  width: 0; height: 0;
-  border-left: 8px solid #000;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 80px 20px;
-  color: rgba(255,255,255,.4);
-}
-
-.empty-state h2 { font-size: 20px; margin-bottom: 8px; }
-
-@media (max-width: 640px) {
-  h1 { font-size: 22px; }
-  .header { padding: 20px 14px; }
-  .team { font-size: 15px; }
-  .card { padding: 16px; }
-}
+        .s-btn.active { background: rgba(255, 215, 0, 0.1); border-color: var(--gold); color: var(--gold); }
+        .hidden { display: none !important; }
+        
+        @media (max-width: 480px) {
+            .switcher { grid-template-columns: 1fr 1fr; }
+        }
     </style>
-  </head>
-  <body>
-    <div class="header">
-      <h1>
-        ⚽ Live Football
-      </h1>
-      <div class="subtitle">
-        Watch live matches in HD quality
-      </div>
-      <div class="count-badge">
-        14 matches available
-      </div>
+</head>
+<body>
+
+<header class="header">
+    <h1 class="brand-logo">CMV</h1>
+    <a href="https://t.me/cricketmemesverse873" target="_blank" rel="noopener noreferrer" class="tg-badge">Join Channel</a>
+</header>
+
+<div id="popup" class="popup-overlay">
+    <div class="popup-card">
+        <h2 style="margin-bottom: 8px; font-weight: 900;">Watch All Live matches</h2>
+        <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 25px;">Elite 4K Sports Hub</p>
+        <a href="https://t.me/cricketmemesverse873" target="_blank" rel="noopener noreferrer" class="btn-main btn-gold">JOIN FOR LIVE LINKS</a>
+        <button class="btn-main btn-outline" onclick="unlockSite()">ALREADY JOINED</button>
     </div>
-    <div class="container">
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          Trendyol SÃ¼per Lig
-</span>
-          <span class="tournament-count">          2
-</span>
-        </div>
-        <a class="card" href="?play=0">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Antalyaspor
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Samsunspor
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 13 Feb 2026
-</span>
-          <span class="meta-item">          🕐 10:30 PM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-        <a class="card" href="?play=1">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Galatasaray
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          EyÃ¼pspor
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 13 Feb 2026
-</span>
-          <span class="meta-item">          🕐 10:30 PM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          2. Bundesliga
-</span>
-          <span class="tournament-count">          1
-</span>
-        </div>
-        <a class="card" href="?play=2">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          NÃ¼rnberg
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Karlsruhe
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 13 Feb 2026
-</span>
-          <span class="meta-item">          🕐 11:00 PM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          Saudi Pro League
-</span>
-          <span class="tournament-count">          2
-</span>
-        </div>
-        <a class="card" href="?play=3">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            2 sources
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Al-Hilal
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Al-Ettifaq
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 13 Feb 2026
-</span>
-          <span class="meta-item">          🕐 08:55 PM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-        <a class="card" href="?play=4">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            2 sources
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Al-Ittihad
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Al-Fayha
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 13 Feb 2026
-</span>
-          <span class="meta-item">          🕐 11:00 PM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          Serie A
-</span>
-          <span class="tournament-count">          1
-</span>
-        </div>
-        <a class="card" href="?play=5">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Pisa
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Milan
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 01:15 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          LaLiga
-</span>
-          <span class="tournament-count">          1
-</span>
-        </div>
-        <a class="card" href="?play=6">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            2 sources
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Elche
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Osasuna
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 01:30 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          Bundesliga
-</span>
-          <span class="tournament-count">          1
-</span>
-        </div>
-        <a class="card" href="?play=7">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            2 sources
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Dortmund
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Mainz 05
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 01:00 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          Liga Portugal Betclic
-</span>
-          <span class="tournament-count">          2
-</span>
-        </div>
-        <a class="card" href="?play=8">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Santa Clara
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Benfica
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 12:00 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-        <a class="card" href="?play=9">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Tondela
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Alverca
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 02:15 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          VriendenLoterij Eredivisie
-</span>
-          <span class="tournament-count">          1
-</span>
-        </div>
-        <a class="card" href="?play=10">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Volendam
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          PSV
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 12:30 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          FA Cup
-</span>
-          <span class="tournament-count">          2
-</span>
-        </div>
-        <a class="card" href="?play=11">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Hull
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Chelsea
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 01:15 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-        <a class="card" href="?play=12">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          Wrexham
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          Ipswich
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 01:15 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
-      <div class="tournament-section">
-        <div class="tournament-header">
-          <span class="tournament-icon">          🏆
-</span>
-          <span class="tournament-name">          LaLiga 2
-</span>
-          <span class="tournament-count">          1
-</span>
-        </div>
-        <a class="card" href="?play=13">        <div class="card-top">
-          <div class="live-badge">
-            <span class="live-dot"></span>
-            LIVE
-          </div>
-          <div class="stream-count">
-            1 source
-          </div>
-        </div>
-        <div class="teams-row">
-          <span class="team">          AlmerÃ­a
-</span>
-          <span class="vs-badge">          VS
-</span>
-          <span class="team">          FC Andorra
-</span>
-        </div>
-        <div class="card-meta">
-          <span class="meta-item">          📅 14 Feb 2026
-</span>
-          <span class="meta-item">          🕐 01:00 AM IST
-</span>
-        </div>
-        <div class="watch-btn">
-          <span class="play-icon"></span>
-          Watch Now
-        </div>
-</a>
-      </div>
+</div>
+
+<div id="content" class="main-wrapper">
+    <div class="switcher" id="switcher-container"></div>
+
+    <div class="video-container-box">
+        <video id="player" playsinline controls crossorigin autoplay muted></video>
     </div>
-  </body>
+
+    <div style="text-align:center; margin-top:20px;">
+        <script type="text/javascript">
+            aclib.runBanner({
+                zoneId: '10973938',
+            });
+        </script>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
+
+<script>
+    // Channel List compatible with HLS/M3U8
+    const channels = {
+        willow: {
+            name: 'WILLOW PLUS',
+            manifest: 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8'
+        }
+    };
+
+    let playerInstance;
+    let hls;
+
+    const switcher = document.getElementById('switcher-container');
+    Object.keys(channels).forEach((id, index) => {
+        const btn = document.createElement('button');
+        btn.className = `s-btn ${index === 0 ? 'active' : ''}`;
+        btn.id = `btn-${id}`;
+        btn.innerText = channels[id].name;
+        btn.onclick = () => switchStream(id);
+        switcher.appendChild(btn);
+    });
+
+    function unlockSite() {
+        document.getElementById('popup').classList.add('hidden');
+        document.getElementById('content').style.display = 'block';
+        initPlayer('willow');
+    }
+
+    function initPlayer(id) {
+        const video = document.getElementById('player');
+        const source = channels[id].manifest;
+
+        if (hls) { hls.destroy(); }
+
+        if (Hls.isSupported()) {
+            hls = new Hls();
+            hls.loadSource(source);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                const availableQualities = hls.levels.map((l) => l.height);
+                availableQualities.unshift(-1);
+
+                if (!playerInstance) {
+                    playerInstance = new Plyr(video, {
+                        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+                        quality: {
+                            default: -1,
+                            options: availableQualities,
+                            forced: true,
+                            onChange: (q) => { hls.currentLevel = availableQualities.indexOf(q) - 1; }
+                        },
+                        i18n: { qualityLabel: { '-1': 'Auto' } }
+                    });
+                }
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = source;
+            if (!playerInstance) { playerInstance = new Plyr(video); }
+        }
+    }
+
+    function switchStream(id) {
+        document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`btn-${id}`).classList.add('active');
+        initPlayer(id);
+    }
+</script>
+
+</body>
 </html>
