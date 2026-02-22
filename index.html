@@ -1,275 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-    <script type="text/javascript">
-        aclib.runPop({
-            zoneId: '10973950',
-        });
-    </script>
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="referrer" content="no-referrer">
-    <title>CMV | Elite Streaming</title>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+<script type="text/javascript">
+    aclib.runPop({
+        zoneId: '10973950',
+    });
+</script>
 
-    <style>
-        :root {
-            --gold: #FFD700;
-            --gold-glow: rgba(255, 215, 0, 0.4);
-            --bg-dark: #05070a;
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<title>CMV | Elite Streaming</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+<style>
+:root {
+--gold: #FFD700;
+--gold-glow: rgba(255, 215, 0, 0.4);
+--bg-dark: #05070a;
+--card-bg: rgba(255, 255, 255, 0.04);
+--text-main: #ffffff;
+--text-dim: #a0a0a0;
+--transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
 
-        body {
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at top right, #1a1a2e, transparent),
-                              radial-gradient(circle at bottom left, #0d1117, transparent);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-            width: 100%;
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        .plyr {
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .plyr--full-ui input[type=range] { color: var(--gold); }
-        .plyr__control--overlaid { background: var(--gold); color: #000; }
-        .plyr--video .plyr__control.plyr__tab-focus,
-        .plyr--video .plyr__control:hover,
-        .plyr--video .plyr__control[aria-expanded=true] { background: var(--gold); color: #000; }
+body {
+background-color: var(--bg-dark);
+background-image: radial-gradient(circle at top right, #1a1a2e, transparent),
+radial-gradient(circle at bottom left, #0d1117, transparent);
+color: var(--text-main);
+font-family: 'Inter', sans-serif;
+min-height: 100vh;
+overflow-x: hidden;
+width: 100%;
+}
 
-        .header {
-            padding: 20px; text-align: center; backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            position: sticky; top: 0; z-index: 100; background: rgba(5, 7, 10, 0.85);
-        }
+.shaka-video-container {
+border-radius: 16px;
+overflow: hidden;
+box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+width: 100% !important;
+}
 
-        .brand-logo {
-            font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px;
-            background: linear-gradient(to bottom, #fff 40%, var(--gold));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
-        }
+.shaka-video-container:fullscreen { border-radius: 0; }
+#video {
+width: 100% !important;
+height: 100% !important;
+object-fit: contain;
+}
 
-        .tg-badge {
-            display: inline-flex; align-items: center; background: rgba(255,255,255,0.05);
-            padding: 8px 20px; border-radius: 50px; text-decoration: none;
-            color: var(--gold); font-size: 0.8rem; font-weight: 800;
-            border: 1px solid rgba(255, 215, 0, 0.2); transition: var(--transition);
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .tg-badge:hover { background: var(--gold); color: #000; transform: scale(1.05); }
+video::-webkit-media-controls, video::-webkit-media-controls-enclosure { display:none !important; }
 
-        .popup-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.98);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 9999; backdrop-filter: blur(20px);
-        }
+.shaka-spinner-container, .shaka-spinner {
+display: none !important;
+visibility: hidden !important;
+opacity: 0 !important;
+}
 
-        .popup-card {
-            background: #000; padding: 40px; border-radius: 28px;
-            border: 1px solid rgba(255,215,0,0.2); text-align: center;
-            max-width: 380px; width: 90%;
-        }
+.shaka-controls-container {
+background: transparent !important;
+}
+.shaka-bottom-controls {
+padding: 0 10px 10px 10px !important;
+filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.8));
+}
 
-        .btn-main {
-            display: block; width: 100%; padding: 14px; border-radius: 12px;
-            font-size: 0.95rem; font-weight: 700; cursor: pointer;
-            transition: var(--transition); margin-top: 12px; text-decoration: none;
-        }
-        .btn-gold { background: var(--gold); color: #000; border: none; }
-        .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+.shaka-seek-bar-container .shaka-range-element {
+--shaka-main-theme-color: var(--gold) !important;
+}
 
-        .main-wrapper { max-width: 1000px; margin: 0 auto; padding: 15px; display: none; }
-        
-        .video-container-box {
-            position: relative; width: 100%;
-            background: #000; border-radius: 16px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
-        }
+.header {
+padding: 20px; text-align: center; backdrop-filter: blur(15px);
+border-bottom: 1px solid rgba(255,255,255,0.05);
+position: sticky; top: 0; z-index: 100; background: rgba(5, 7, 10, 0.85);
+}
 
-        .switcher {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px; margin-bottom: 20px;
-        }
+.brand-logo {
+font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px;
+background: linear-gradient(to bottom, #fff 40%, var(--gold));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+margin-bottom: 12px;
+}
 
-        .s-btn {
-            padding: 12px 8px; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08);
-            color: #fff; border-radius: 10px; font-weight: 600; font-size: 0.85rem;
-            cursor: pointer; transition: var(--transition);
-        }
+.tg-badge {
+display: inline-flex; align-items: center; background: rgba(255,255,255,0.05);
+padding: 8px 20px; border-radius: 50px; text-decoration: none;
+color: var(--gold); font-size: 0.8rem; font-weight: 800;
+border: 1px solid rgba(255, 215, 0, 0.2); transition: var(--transition);
+text-transform: uppercase; letter-spacing: 1px;
+}
+.tg-badge:hover { background: var(--gold); color: #000; transform: scale(1.05); }
 
-        .s-btn.active { background: rgba(255, 215, 0, 0.1); border-color: var(--gold); color: var(--gold); }
-        .hidden { display: none !important; }
-        
-        @media (max-width: 480px) {
-            .switcher { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+.popup-overlay {
+position: fixed; inset: 0; background: rgba(0,0,0,0.98);
+display: flex; align-items: center; justify-content: center;
+z-index: 9999; backdrop-filter: blur(20px);
+}
+
+.popup-card {
+background: #000; padding: 40px; border-radius: 28px;
+border: 1px solid rgba(255,215,0,0.2); text-align: center;
+max-width: 380px; width: 90%;
+}
+
+.btn-main {
+display: block; width: 100%; padding: 14px; border-radius: 12px;
+font-size: 0.95rem; font-weight: 700; cursor: pointer;
+transition: var(--transition); margin-top: 12px; text-decoration: none;
+}
+.btn-gold { background: var(--gold); color: #000; border: none; }
+.btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+
+.main-wrapper { max-width: 1000px; margin: 0 auto; padding: 15px; display: none; }
+.video-container-box {
+position: relative; width: 100%; padding-top: 56.25%;
+background: #000; border-radius: 16px; overflow: hidden;
+border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
+}
+
+#player-container { position: absolute; top: 0; left: 0; bottom: 0; right: 0; }
+
+.switcher {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+gap: 10px; margin-bottom: 20px;
+}
+
+.s-btn {
+padding: 12px 8px; background: var(--card-bg); border: 1px solid rgba(255,255,255,0.08);
+color: #fff; border-radius: 10px; font-weight: 600; font-size: 0.85rem;
+cursor: pointer; transition: var(--transition);
+}
+
+.s-btn.active { background: rgba(255, 215, 0, 0.1); border-color: var(--gold); color: var(--gold); }
+
+.hidden { display: none !important; }
+@media (max-width: 480px) {
+.switcher { grid-template-columns: 1fr 1fr; }
+}
+</style>
 </head>
 <body>
 
 <header class="header">
-    <h1 class="brand-logo">CMV</h1>
-    <a href="https://t.me/cricketmemesverse873" target="_blank" rel="noopener noreferrer" class="tg-badge">Join Channel</a>
+<h1 class="brand-logo">CMV</h1>
+<a href="https://t.me/cricketmemesverse873" target="_blank" rel="noopener noreferrer" class="tg-badge">Join Channel</a>
 </header>
 
 <div id="popup" class="popup-overlay">
-    <div class="popup-card">
-        <h2 style="margin-bottom: 8px; font-weight: 900;">Watch All Live matches</h2>
-        <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 25px;">Elite 4K Sports Hub</p>
-        <a href="https://t.me/cricketmemesverse873" target="_blank" rel="noopener noreferrer" class="btn-main btn-gold">JOIN FOR LIVE LINKS</a>
-        <button class="btn-main btn-outline" onclick="unlockSite()">ALREADY JOINED</button>
-    </div>
+<div class="popup-card">
+<h2 style="margin-bottom: 8px; font-weight: 900;">Watch All Live matches</h2>
+<p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 25px;">Elite 4K Sports Hub</p>
+<a href="https://t.me/cricketmemesverse873" target="_blank" rel="noopener noreferrer" class="btn-main btn-gold">JOIN FOR LIVE LINKS</a>
+<button class="btn-main btn-outline" onclick="unlockSite()">ALREADY JOINED</button>
+</div>
 </div>
 
 <div id="content" class="main-wrapper">
-    <div class="switcher" id="switcher-container"></div>
+<div class="switcher" id="switcher-container"></div>
 
-    <div class="video-container-box">
-        <video id="player" playsinline controls crossorigin autoplay muted></video>
-    </div>
-
-    <div style="text-align:center; margin-top:20px;">
-        <script type="text/javascript">
-            aclib.runBanner({
-                zoneId: '10973938',
-            });
-        </script>
-    </div>
+<div class="video-container-box">
+<div data-shaka-player-container id="player-container">
+<video autoplay data-shaka-player id="video" playsinline></video>
+</div>
+</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
 <script>
-    const channels = {
-        willow: {
-            name: 'WILLOW PLUS',
-            manifest: 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8'
-        },
-        tnt1: {
-            name: 'SKY CRICKET',
-            manifest: 'https://river-1.rutube.ru/stream/genetta-319.m9.rutube.ru/q1ctULcW_8GSn29LXCVgQQ/1771921519/9585fdae92af45f113fdcc9f6c4ba442/1080p_stream.m3u8'
-        },
-        tnt2: {
-            name: 'TNT 2',
-            manifest: 'http://sewv654wfcsdwfi87fwvgbngh.siauliairsavlt.pw/iptv/HBX28K5SXCR6EH/2506/index.m3u8'
-        },
-        tnt3: {
-            name: 'TNT 3',
-            manifest: 'http://sewv654wfcsdwfi87fwvgbngh.siauliairsavlt.pw/iptv/HBX28K5SXCR6EH/6564/index.m3u8'
-        },
-        tnt4: {
-            name: 'TNT 4',
-            manifest: 'http://sewv654wfcsdwfi87fwvgbngh.siauliairsavlt.pw/iptv/HBX28K5SXCR6EH/19054/index.m3u8'
-        }
-    };
+// Updated channel list - TNT 1-4 removed
+const channels = {
+prime: {
+name: 'PRIME ENGLISH',
+manifest: 'https://a109aivottepl-a.akamaihd.net/syd-nitro/live/clients/dash/enc/bynuls0umq/out/v1/8f460e2902ee422e9ee8229e6de25719/cenc.mpd',
+drmKeyId: 'ed76c18710d621a87c89dedc7c13019f',
+drmKey: '7241c82fe48525a9dc6be6d7bb86611f'
+},
+laliga: {
+name: 'PRIME HINDI',
+manifest: 'https://a201aivottlinear-a.akamaihd.net/OTTB/pdx-nitro/live/clients/dash/enc/rxhxc14ikz/out/v1/bb976c39247941f3b4c9fa0a0735426d/cenc.mpd',
+drmKeyId: '3b1768e88fe20087baaa029ece65cc59',
+drmKey: '8ab5b1d0808ac9e3811750a0713d114e'
+}
+};
 
-    let playerInstance;
-    let hls;
+let player, ui, video, controls;
 
-    const switcher = document.getElementById('switcher-container');
-    Object.keys(channels).forEach((id, index) => {
-        const btn = document.createElement('button');
-        btn.className = `s-btn ${index === 0 ? 'active' : ''}`;
-        btn.id = `btn-${id}`;
-        btn.innerText = channels[id].name;
-        btn.onclick = () => switchStream(id);
-        switcher.appendChild(btn);
-    });
+const switcher = document.getElementById('switcher-container');
+Object.keys(channels).forEach((id, index) => {
+const btn = document.createElement('button');
+btn.className = `s-btn ${index === 0 ? 'active' : ''}`;
+btn.id = `btn-${id}`;
+btn.innerText = channels[id].name;
+btn.onclick = () => switchStream(id);
+switcher.appendChild(btn);
+});
 
-    function unlockSite() {
-        document.getElementById('popup').classList.add('hidden');
-        document.getElementById('content').style.display = 'block';
-        initPlayer('willow');
-    }
+function unlockSite() {
+document.getElementById('popup').classList.add('hidden');
+document.getElementById('content').style.display = 'block';
+initApp();
+}
 
-    function initPlayer(id) {
-        const video = document.getElementById('player');
-        const source = channels[id].manifest;
+async function initApp() {
+video = document.getElementById('video');
+ui = video['ui'];
+controls = ui.getControls();
+player = controls.getPlayer();
 
-        if (hls) {
-            hls.destroy();
-        }
+video.addEventListener('playing', () => {
+setTimeout(() => { controls.hideControls(); }, 2500);
+});
 
-        if (Hls.isSupported()) {
-            hls = new Hls({
-                xhrSetup: function(xhr, url) {
-                    xhr.withCredentials = false; // Important for some IPTV streams
-                }
-            });
-            hls.loadSource(source);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                const availableQualities = hls.levels.map((l) => l.height);
-                availableQualities.unshift(-1);
+player.configure({
+abr: {
+enabled: true,
+defaultBandwidthEstimate: 10000000,
+switchInterval: 1,
+restrictToMaxBitrate: false
+},
+streaming: {
+bufferingGoal: 30,
+rebufferingGoal: 2,
+alwaysStreamText: true
+}
+});
+loadStream('prime');
+}
 
-                if (!playerInstance) {
-                    playerInstance = new Plyr(video, {
-                        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                        quality: {
-                            default: -1,
-                            options: availableQualities,
-                            forced: true,
-                            onChange: (q) => { 
-                                if (q === -1) { hls.currentLevel = -1; }
-                                else { hls.currentLevel = availableQualities.indexOf(q) - 1; }
-                            }
-                        },
-                        i18n: { qualityLabel: { '-1': 'Auto' } }
-                    });
-                }
-                video.play().catch(() => {
-                    console.log("Autoplay blocked, user interaction needed.");
-                });
-            });
+async function loadStream(id) {
+const s = channels[id];
+try {
+await player.unload();
+await player.configure({ drm: { clearKeys: { [s.drmKeyId]: s.drmKey } } });
+await player.load(s.manifest);
+video.play();
+} catch (e) { console.error('Error', e); }
+}
 
-            // Error Handling for TNT Links
-            hls.on(Hls.Events.ERROR, function(event, data) {
-                if (data.fatal) {
-                    switch (data.type) {
-                        case Hls.ErrorTypes.NETWORK_ERROR:
-                            console.log("Network error, trying to recover...");
-                            hls.startLoad();
-                            break;
-                        case Hls.ErrorTypes.MEDIA_ERROR:
-                            hls.recoverMediaError();
-                            break;
-                        default:
-                            hls.destroy();
-                            break;
-                    }
-                }
-            });
-
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = source;
-            if (!playerInstance) { playerInstance = new Plyr(video); }
-        }
-    }
-
-    function switchStream(id) {
-        document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`btn-${id}`).classList.add('active');
-        initPlayer(id);
-    }
+function switchStream(id) {
+document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
+document.getElementById(`btn-${id}`).classList.add('active');
+loadStream(id);
+}
 </script>
-
 </body>
 </html>
 
+<div>
+    <script type="text/javascript">
+        aclib.runBanner({
+            zoneId: '10973938',
+        });
+    </script>
+</div>
